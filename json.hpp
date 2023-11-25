@@ -41,8 +41,8 @@ namespace json {
   class JSON
   {
     union BackingData {
-      BackingData( double d ) : Float( d ){}
-      BackingData( long   l ) : Int( l ){}
+      BackingData( long double d ) : Float( d ){}
+      BackingData( long long   l ) : Int( l ){}
       BackingData( bool   b ) : Bool( b ){}
       BackingData( std::string s ) : String( new std::string( s ) ){}
       BackingData()       : Int( 0 ){}
@@ -196,10 +196,10 @@ namespace json {
       JSON( T b, typename std::enable_if<std::is_same<T,bool>::value>::type* = 0 ) : Internal( b ), Type( Class::Boolean ){}
 
       template <typename T>
-      JSON( T i, typename std::enable_if<std::is_integral<T>::value && !std::is_same<T,bool>::value>::type* = 0 ) : Internal( (long)i ), Type( Class::Integral ){}
+      JSON( T i, typename std::enable_if<std::is_integral<T>::value && !std::is_same<T,bool>::value>::type* = 0 ) : Internal( (long long)i ), Type( Class::Integral ){}
 
       template <typename T>
-      JSON( T f, typename std::enable_if<std::is_floating_point<T>::value>::type* = 0 ) : Internal( (double)f ), Type( Class::Floating ){}
+      JSON( T f, typename std::enable_if<std::is_floating_point<T>::value>::type* = 0 ) : Internal( (long double)f ), Type( Class::Floating ){}
 
       template <typename T>
       JSON( T s, typename std::enable_if<std::is_convertible<T,std::string>::value>::type* = 0 ) : Internal( std::string( s ) ), Type( Class::String ){}
@@ -320,20 +320,20 @@ namespace json {
         return ok ? std::move( json_escape( *Internal.String ) ): std::string("");
       }
 
-      double ToFloat() const {
+      long double ToFloat() const {
         bool b;
         return ToFloat( b );
       }
-      double ToFloat( bool &ok ) const {
+      long double ToFloat( bool &ok ) const {
         ok = (Type == Class::Floating);
         return ok ? Internal.Float : 0.0;
       }
 
-      long ToInt() const {
+      long long ToInt() const {
         bool b;
         return ToInt( b );
       }
-      long ToInt( bool &ok ) const {
+      long long ToInt( bool &ok ) const {
         ok = (Type == Class::Integral);
         return ok ? Internal.Int : 0;
       }
@@ -671,16 +671,17 @@ namespace json {
         return std::move( JSON::Make( JSON::Class::Null ) );
       }
       --offset;
-      
-      if( isDouble ) {
-        Number = std::stold( val ) * std::pow( 10, exp );
-      } else {
-        if( !exp_str.empty() ) {
-          Number = std::stoll( val ) * std::pow( 10, exp );
-        } else {
-          Number = std::stoll( val );
-        }
+
+      if ( !isDouble ) {
+        if (exp_str.empty()) Number = std::stoll( val );
+        else Number = std::stoll( val ) * std::pow( 10, exp );
       }
+
+      if( isDouble ) {
+        if (exp_str.empty()) Number = std::stold( val );
+        else Number = std::stold( val ) * std::pow( 10, exp );
+      }
+
       return std::move( Number );
     }
 
