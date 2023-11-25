@@ -13,13 +13,12 @@ SimpleJSON should work on any platform; it's only requirement is a C++11 compati
 ## API
 You can find the API [over here](API.md). For now it's just a Markdown file with C++ syntax highlighting, but it's better than nothing!
 
-## Upcoming Features
-SimpleJSON is still missing some features, which I hope to get done soon!
-* Write more test cases to cover all major components( mostly parsing )
+## Fork
 
-One of the biggests goals for SimpleJSON is for it to be lightweight, and small. Having complicated logic isn't bad, but it bloats the codebase in most cases. I'd like to keep things small rather than put in big features that take a ton of space.
+First Thanks To The Creator [nbsdx](https://github.com/nbsdx)!
 
-If you run into any bugs, or see that I'm missing a featuer, please submit an issue through GitHub and I'll respond as soon as I can!
+- Fix - Convert numbers to stoll() & stold(), because JavaScript use 64-bit Floating Point.
+- Update - Undefined, now stringify ignore The "undefined" value.
 
 ## Example
 More examples can be found in the 'examples' directory. Check out [the API](API.md) for a full list of functions.
