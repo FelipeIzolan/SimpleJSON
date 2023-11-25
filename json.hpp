@@ -50,8 +50,8 @@ namespace json {
       std::deque<JSON>    *List;
       std::map<std::string,JSON>   *Map;
       std::string       *String;
-      double        Float;
-      long        Int;
+      long double        Float;
+      long long        Int;
       bool        Bool;
     } Internal;
 
@@ -665,7 +665,7 @@ namespace json {
             break;
           }
         }
-        exp = std::stol( exp_str );
+        exp = std::stoll( exp_str );
       } else if( !isspace( c ) && c != ',' && c != ']' && c != '}' ) {
         std::cerr << "ERROR: Number: unexpected character '" << c << "'\n";
         return std::move( JSON::Make( JSON::Class::Null ) );
